@@ -1,0 +1,38 @@
+diff --git a/src/comp.c b/src/comp.c
+index 44ab6b34939..c568f0e4e27 100644
+--- a/src/comp.c
++++ b/src/comp.c
+@@ -30,6 +30,7 @@
+ #include <signal.h>
+ #include <libgccjit.h>
+ #include <epaths.h>
++#include <stat-time.h>
+ 
+ #include "puresize.h"
+ #include "window.h"
+@@ -764,6 +765,7 @@ comp_hash_source_file (Lisp_Object filename)
+ 	      filename);
+ #endif
+   Lisp_Object encoded_filename = ENCODE_FILE (filename);
++#if 0
+   FILE *f = emacs_fopen (SSDATA (encoded_filename), is_gz ? "rb" : "r");
+ 
+   if (!f)
+@@ -782,6 +784,17 @@ comp_hash_source_file (Lisp_Object filename)
+ 
+   if (res)
+     xsignal2 (Qfile_notify_error, build_string ("hashing failed"), filename);
++#else
++  struct stat st1;
++  Lisp_Object digest = make_uninit_string (MD5_DIGEST_SIZE * 2);
++  if (emacs_fstatat (AT_FDCWD, SSDATA (encoded_filename), &st1, 0) == 0)
++    {
++      struct timespec ts = get_stat_mtime(&st1);
++      md5_buffer (&ts, sizeof (ts), SSDATA (digest));
++    }
++  else
++    xsignal2 (Qfile_notify_error, build_string ("hashing failed"), filename);
++# endif
+ 
+   hexbuf_digest (SSDATA (digest), SSDATA (digest), MD5_DIGEST_SIZE);
+ 
