@@ -1,0 +1,13 @@
+diff --git a/src/puresize.h b/src/puresize.h
+index d7d8f0b4eec..3752d8052c6 100644
+--- a/src/puresize.h
++++ b/src/puresize.h
+@@ -47,7 +47,7 @@ #define SITELOAD_PURESIZE_EXTRA 0
+ #endif
+ 
+ #ifndef BASE_PURESIZE
+-#define BASE_PURESIZE (3100000 + SYSTEM_PURESIZE_EXTRA + SITELOAD_PURESIZE_EXTRA)
++#define BASE_PURESIZE (4100000 + SYSTEM_PURESIZE_EXTRA + SITELOAD_PURESIZE_EXTRA)
+ #endif
+ 
+ /* Increase BASE_PURESIZE by a ratio depending on the machine's word size.  */
